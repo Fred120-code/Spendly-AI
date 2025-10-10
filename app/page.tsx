@@ -5,13 +5,15 @@ export default function Home() {
     <div>
       <div className="flex items-center justify-center flex-col py-10 w-full">
         <div className="flex items-center justify-around gap-20 w-full mb-10 p-10 h-20">
-          <h1 className="text-[#E0FF67] font-bold text-xl">Spendly AI</h1>
+          <h1 className="text-[#E0FF67] font-bold md:text-xl sm:text-xs">
+            Spendly <span className="text-white">AI</span>
+          </h1>
           <div className="flex gap-3">
             <button className="btn btn-primary btn-soft btn-sm md:btn-md  rounded-2xl">
-              <Link href={""}>Se connecter</Link>
+              <Link href={"/sign-in"}>Se connecter</Link>
             </button>
             <button className="btn btn-primary btn-soft btn-sm md:btn-md  rounded-2xl">
-              <Link href={""}>S'inscrire</Link>
+              <Link href={"/sign-up"}>S'inscrire</Link>
             </button>
           </div>
         </div>
