@@ -1,11 +1,12 @@
-"use client"
-import { UserButton } from "@clerk/nextjs";
+"use client";
+import { UserButton, useUser } from "@clerk/nextjs";
 import { ArrowLeftRight, Bot, ChartLine, Wallet } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import React from "react";
+import React, { useEffect } from "react";
 
 const Navbar = () => {
+  const { user } = useUser();
   const navLinks = [
     {
       href: "/dashboard",
@@ -46,7 +47,7 @@ const Navbar = () => {
             <Link
               href={href}
               key={href}
-              className={` outline-none p-2 flex gap-2 items-center rounded-lg ${activeClass} font-semibold`}
+              className={` outline-none p-2 flex gap-2 items-center rounded-lg ${activeClass} font-semibold text-sm`}
             >
               <Icon className="w-4 h-4" />
               {label}
@@ -57,18 +58,18 @@ const Navbar = () => {
     );
   };
   return (
-    <div className="border-2 bg-[#201F31] mt-7 ml-7 rounded-2xl border-base-100 px-5 md:px-[10%] p-4 relative mx-auto">
-      <div className="flex flex-col items-center justify-center">
-        <div className="mt-4 mb-12">
+    <div className="border-2 bg-[#201F31] mt-7 ml-7 rounded-2xl border-base-100  md:px-[10%] p-4 relative mx-auto">
+      <div className="flex flex-col items-center justify-center space-y-6">
+        <div className="mt-4 mb-25">
           <h1 className="text-white font-bold text-[0.75rem] leading-[1.25rem] sm:text-[0.5rem] sm:leading-[1.5rem] md:text-[0.75rem] md:leading-[1.75rem] lg:text-[1.5rem] lg:leading-[2rem]">
             Spendly <span>AI</span>
           </h1>
         </div>
         <div className="hidden space-x-2 sm:flex items-center flex-col justify-between gap-10">
           {renderLinks()}
-          <div className="flex flex-col items-center space-y-2">
+          <div className="flex flex-col items-center space-y-2 mt-10">
             <UserButton />
-            <h2 className="text-white">Vous</h2>
+            <h2 className="text-white">Salut {user?.fullName}</h2>
           </div>
         </div>
       </div>
