@@ -109,7 +109,7 @@ export default function Home() {
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5 lg:gap-10 lg:mb-16 w-full max-w-6xl px-4 mt-6">
             {features.map((item) => (
               <div
-                className="bg-white border-2 border-[#DAF866] gap-6 m-0 p-6 w-full h-full flex flex-col items-center lg:items-start text-center rounded-md shadow-md"
+                className="bg-white border-2 border-[#DAF866] gap-6 m-3 p-6 w-full h-full flex flex-col items-center lg:items-start text-center rounded-md shadow-md"
                 key={item.id}
               >
                 <div className="w-20 h-20 bg-[#dbf575c0] flex items-center justify-center rounded-lg mb-4">
@@ -127,8 +127,34 @@ export default function Home() {
             ))}
           </div>
 
-          <div>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5 lg:gap-10 lg:mb-16 w-full max-w-6xl px-4 mt-20">
+            {stats.map((stat) => (
+              <div key={stat.id} className="flex flex-col items-center mt-6">
+                <h3 className="text-[#CEEA63] text-2xl font-bold">
+                  {stat.number}
+                </h3>
+                <p className="text-white text-xl font-semibold">
+                  {stat.descriptioin}
+                </p>
+              </div>
+            ))}
+          </div>
+        </div>
 
+        <div className="bg-[#e1ff6750] h-[1px] w-full mt-10"></div>
+
+        <div className="flex flex-col items-center mt-10">
+          <h1 className="text-white text-xl lg:text-3xl font-bold">
+            Prêt à transformer vos finances ?
+          </h1>
+          <p className="text-[#CEEA63] text-center font-semibold text-sm lg:text-xl">
+            Rejoignez des milliers d'utilisateurs qui optimisent leur budget
+            avec SmartSpend AI
+          </p>
+          <div className="bg-[#E0FF67] mt-10 w-1/4 h-9 flex items-center justify-center rounded-sm">
+            <Link href="/dashboard">
+              <h2 className="text-xs lg:text-sm text-center">Commencer maintenant</h2>
+            </Link>
           </div>
         </div>
       </div>
