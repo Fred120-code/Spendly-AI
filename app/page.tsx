@@ -1,11 +1,25 @@
+"use client";
 import { Brain, ChartNoAxesCombined, Zap } from "lucide-react";
 import Header from "./components/Header";
 import Hero from "./components/Hero";
 import FeaturesSection from "./components/FeaturesSection";
 import StatsSection from "./components/StatsSection";
 import CtaSection from "./components/CtaSection";
+import AOS from "aos";
+import "aos/dist/aos.css";
+import { useEffect } from "react";
 
 export default function Home() {
+  useEffect(() => {
+    AOS.init({
+      duration: 800,
+      easing: "ease-in-sine",
+      delay: 100,
+      offset: 100,
+    });
+    AOS.refresh();
+  }, []);
+
   const features = [
     {
       id: 0,
@@ -58,7 +72,7 @@ export default function Home() {
 
         <div className="bg-[#e1ff6750] h-[1px] w-full mt-10"></div>
 
-        <div className="mt-10 w-full flex flex-col justify-around items-center">
+        <div className="mt-15 mb-15 w-full flex flex-col justify-around items-center">
           <div className="flex flex-col text-center lg:items-start lg:justify-start mb-6 lg:w-[60%]">
             <h2 className="text-white font-bold lg:text-3xl">
               Tout ce dont vous avez besoin

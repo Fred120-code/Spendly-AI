@@ -2,7 +2,7 @@ import Link from "next/link";
 
 export default function CtaSection() {
   return (
-    <div className="flex flex-col items-center mt-10">
+    <div className="flex flex-col items-center mt-15 mb-15">
       <h1 className="text-white text-xl lg:text-3xl font-bold">
         Prêt à transformer vos finances ?
       </h1>
