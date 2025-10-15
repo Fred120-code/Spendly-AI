@@ -58,8 +58,8 @@ export default function Home() {
 
         <div className="bg-[#e1ff6750] h-[1px] w-full mt-10"></div>
 
-        <div className="mt-10 w-full lg:ml-160 flex flex-col justify-around">
-          <div className="flex flex-col text-center lg:items-start lg:justify-start mb-6 ">
+        <div className="mt-10 w-full flex flex-col justify-around items-center">
+          <div className="flex flex-col text-center lg:items-start lg:justify-start mb-6 lg:w-[60%]">
             <h2 className="text-white font-bold lg:text-3xl">
               Tout ce dont vous avez besoin
             </h2>
