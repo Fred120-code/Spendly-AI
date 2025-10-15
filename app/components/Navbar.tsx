@@ -4,15 +4,18 @@ import { ArrowLeftRight, Bot, ChartLine, Wallet } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import React, { useEffect } from "react";
+import { checkAndAddUser } from "../actions";
 
 const Navbar = () => {
   const { user } = useUser();
+
+  useEffect(() => {
+    if (user?.primaryEmailAddress?.emailAddress) {
+      checkAndAddUser(user?.primaryEmailAddress?.emailAddress);
+    }
+  }, [user]);
+
   const navLinks = [
-    {
-      href: "/dashboard",
-      label: "Dashboard",
-      icon: ChartLine,
-    },
     {
       href: "/budgets",
       label: "Budgets",
@@ -24,9 +27,9 @@ const Navbar = () => {
       icon: ArrowLeftRight,
     },
     {
-      href: "/rappot-ai",
-      label: "Rapport IA",
-      icon: Bot,
+      href: "/dashboard",
+      label: "Dashboard",
+      icon: ChartLine,
     },
   ];
 
@@ -36,18 +39,18 @@ const Navbar = () => {
   //affiche dynamiquement les liens de navigation
   const renderLinks = () => {
     return (
-      <div className="flex flex-col justify-center gap-8 items-start">
+      <div className="flex justify-center items-center gap-15">
         {navLinks.map(({ href, label, icon: Icon }) => {
           const isActive = pathname === href;
           const activeClass = isActive
-            ? " bg-[#D9F277] text-[#201F31]"
+            ? " bg-[#c4e933] text-white"
             : " text-white";
 
           return (
             <Link
               href={href}
               key={href}
-              className={` outline-none p-2 flex gap-2 items-center rounded-lg ${activeClass} font-semibold text-sm`}
+              className={` outline-none p-2 flex gap-2 items-center rounded-sm ${activeClass} font-semibold text-xs`}
             >
               <Icon className="w-4 h-4" />
               {label}
@@ -58,18 +61,18 @@ const Navbar = () => {
     );
   };
   return (
-    <div className="border-2 bg-[#201F31] mt-7 ml-7 rounded-2xl border-base-100  md:px-[10%] p-4 relative mx-auto">
-      <div className="flex flex-col items-center justify-center space-y-6">
-        <div className="mt-4 mb-25">
-          <h1 className="text-white font-bold text-[0.75rem] leading-[1.25rem] sm:text-[0.5rem] sm:leading-[1.5rem] md:text-[0.75rem] md:leading-[1.75rem] lg:text-[1.5rem] lg:leading-[2rem]">
-            Spendly <span>AI</span>
+    <div className="w-full">
+      <div className="flex items-center justify-around mt-5">
+        <div className="">
+          <h1 className="text-white font-bold text-[0.75rem] leading-[1.25rem] sm:text-[0.5rem] sm:leading-[1.5rem] md:text-[0.75rem] md:leading-[1.75rem] lg:text-[1rem] lg:leading-[2rem]">
+            Spendly <span className="text-[#c4e933]">AI</span>
           </h1>
         </div>
-        <div className="hidden space-x-2 sm:flex items-center flex-col justify-between gap-10">
+        <div className="flex items-center gap-6 ">
           {renderLinks()}
-          <div className="flex flex-col items-center space-y-2 mt-10">
+          <div className="flex flex-col items-center">
             <UserButton />
-            <h2 className="text-white">Salut {user?.fullName}</h2>
+            <h2 className="text-white text-xs">Vous</h2>
           </div>
         </div>
       </div>

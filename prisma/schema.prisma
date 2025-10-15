@@ -11,29 +11,29 @@ datasource db {
 }
 
 model User{
-  id String @id @default(uuid())
-  email String
-  createdAt DateTime @default(now())
+  id             String @id @default(uuid())
+  email          String @unique
+  createdAt      DateTime @default(now())
   budgets Budget[]
 }
 
 model Budget{ 
-  id String @id @default(uuid())
-  name String
-  amount Float
-  userId String
-  user User @relation(fields: [userId], references: [id])
-  emoji String?
+  id             String @id @default(uuid())
+  name           String
+  amount         Float
+  userId         String
+  user User      @relation(fields: [userId], references: [id])
+  emoji          String?
   transactions Transaction[]
-  createdAt DateTime @default(now())
+  createdAt      DateTime @default(now())
 }
 
 model Transaction{
-  id String @id @default(uuid())
-  amount Float
-  description String
-  bugetId String?
+  id             String @id @default(uuid())
+  amount         Float
+  description    String
+  bugetId        String?
   budget Budget? @relation(fields: [bugetId], references: [id])
-  emoji String?
-  createdAt DateTime @default(now())
+  emoji          String?
+  createdAt      DateTime @default(now())
 }

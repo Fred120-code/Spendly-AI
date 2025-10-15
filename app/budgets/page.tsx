@@ -1,14 +1,19 @@
 "use client"
 
 import React, { useEffect } from 'react'
+import Wrapper from '../components/Wrapper'
 
 const page = () => {
 
     useEffect(()=>{
-        
+
     })
   return (
-    <div>page</div>
+   <Wrapper>
+    <div>
+        dqsdqsqs
+    </div>
+   </Wrapper>
   )
 }
 

@@ -7,8 +7,8 @@ type WrapperProps = {
 
 const Wrapper = ({children}:WrapperProps) => {
   return (
-    <div className='flex w-full'>
-        <div className='w-1/7'>
+    <div className='flex w-full flex-col justify-center'>
+        <div className='w-full'>
             <Navbar/>
         </div>
         <div className='px-5 md:px-[10%] mt-8 mb-10'>
