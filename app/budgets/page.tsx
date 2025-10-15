@@ -5,6 +5,8 @@ import Wrapper from "../components/Wrapper";
 import { useUser } from "@clerk/nextjs";
 import EmojiPicker from "emoji-picker-react";
 import { addBudget } from "../actions";
+import Notification from "../components/Notification";
+import { Plus } from "lucide-react";
 
 const page = () => {
   const user = useUser();
@@ -12,6 +14,11 @@ const page = () => {
   const [budgetAmount, setBudgetAmount] = useState<string>("");
   const [showEmoji, setShowEmoji] = useState<boolean>(false);
   const [selectedEmoji, setSelectedEmoji] = useState<string>("");
+  const [notification, setNotification] = useState<string>("");
+
+  const closeNotification = () => {
+    setNotification("");
+  };
 
   const handleEmjiSelect = (emojiObject: { emoji: string }) => {
     setSelectedEmoji(emojiObject.emoji);
@@ -36,21 +43,35 @@ const page = () => {
       if (modal) {
         modal.close();
       }
-    } catch (error) {}
+
+      setNotification("Nouveau budget crée avec succes");
+      setBudgetName("");
+      setBudgetAmount("");
+      setSelectedEmoji("");
+      setShowEmoji(false);
+    } catch (error) {
+      setNotification(`Erreur lors de la creation du budget : ${error}`)
+    }
   };
 
   return (
     <Wrapper>
-      <div>
+      {notification && (
+        <Notification
+          message={notification}
+          onclose={closeNotification}
+        ></Notification>
+      )}
+      <div className="flex justify-end mt-6">
         <button
-          className="btn"
+          className="btn btn-soft rounded-sm bg-[#1D283A] border-[#1D283A] border text-white text-xs font-normal"
           onClick={() =>
             (
               document.getElementById("my_modal_3") as HTMLDialogElement
             ).showModal()
           }
         >
-          Ajouter un budget
+          Ajouter un budget   <Plus className="w-4 h-4" />
         </button>
         <dialog id="my_modal_3" className="modal">
           <div className="modal-box">
