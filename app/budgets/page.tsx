@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import Wrapper from "../components/Wrapper";
 import { useUser } from "@clerk/nextjs";
 import EmojiPicker from "emoji-picker-react";
@@ -8,6 +8,7 @@ import { addBudget, getBudgetsByUser } from "../actions";
 import Notification from "../components/Notification";
 import { Plus } from "lucide-react";
 import { Budgets } from "@/type";
+import Link from "next/link";
 
 const page = () => {
   const user = useUser();
@@ -17,6 +18,8 @@ const page = () => {
   const [selectedEmoji, setSelectedEmoji] = useState<string>("");
   const [notification, setNotification] = useState<string>("");
   const [budgets, setBudgets] = useState<Budgets[]>([]);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const modalRef = useRef<HTMLDialogElement | null>(null);
 
   const closeNotification = () => {
     setNotification("");
@@ -41,10 +44,13 @@ const page = () => {
         selectedEmoji
       );
 
-      const modal = document.getElementById("my_modal_3") as HTMLDialogElement;
+      const modal =
+        modalRef.current ??
+        (document.getElementById("my_modal_3") as HTMLDialogElement | null);
       if (modal) {
         modal.close();
       }
+      setIsModalOpen(false);
 
       setNotification("Nouveau budget crée avec succes");
       setBudgetName("");
@@ -63,13 +69,24 @@ const page = () => {
           user.user?.primaryEmailAddress.emailAddress
         );
 
-        setBudgets(userBudget);        
-
+        setBudgets(userBudget);
       } catch (error) {
         setNotification(`Erreur lors de la recuperation des budget : ${error}`);
       }
     }
   };
+
+  useEffect(() => {
+    fetchBudgets();
+  }, [user.user?.primaryEmailAddress?.emailAddress]);
+
+  useEffect(() => {
+    const m = modalRef.current ?? document.getElementById("my_modal_3");
+    if (!m) return;
+    const onClose = () => setIsModalOpen(false);
+    m.addEventListener("close", onClose as EventListener);
+    return () => m.removeEventListener("close", onClose as EventListener);
+  }, []);
 
   return (
     <Wrapper>
@@ -82,18 +99,51 @@ const page = () => {
       <div className="flex justify-end mt-6">
         <button
           className="btn btn-soft rounded-sm bg-[#1D283A] border-[#1D283A] border text-white text-xs font-normal"
-          onClick={() =>
-            (
-              document.getElementById("my_modal_3") as HTMLDialogElement
-            ).showModal()
-          }
+          onClick={() => {
+            const dialog =
+              modalRef.current ??
+              (document.getElementById(
+                "my_modal_3"
+              ) as HTMLDialogElement | null);
+            if (dialog) {
+              dialog.showModal();
+              setIsModalOpen(true);
+            }
+          }}
         >
           Ajouter un budget <Plus className="w-4 h-4" />
         </button>
-        <dialog id="my_modal_3" className="modal">
+        {/* Overlay fallback for browsers: a fixed div with blur */}
+        {isModalOpen && (
+          <div
+            className="fixed inset-0 bg-black/50 backdrop-blur-sm z-40"
+            onClick={() => {
+              const dialog =
+                modalRef.current ??
+                (document.getElementById(
+                  "my_modal_3"
+                ) as HTMLDialogElement | null);
+              if (dialog) dialog.close();
+              setIsModalOpen(false);
+            }}
+          />
+        )}
+
+        <dialog id="my_modal_3" ref={modalRef} className="modal z-50">
           <div className="modal-box">
             <form method="dialog">
-              <button className="btn btn-sm btn-circle btn-ghost absolute right-2 top-2">
+              <button
+                className="btn btn-sm btn-circle btn-ghost absolute right-2 top-2"
+                onClick={() => {
+                  const dialog =
+                    modalRef.current ??
+                    (document.getElementById(
+                      "my_modal_3"
+                    ) as HTMLDialogElement | null);
+                  if (dialog) dialog.close();
+                  setIsModalOpen(false);
+                }}
+              >
                 ✕
               </button>
             </form>
@@ -129,6 +179,13 @@ const page = () => {
           </div>
         </dialog>
       </div>
+      <ul className="grid md:grid-cols-3 gap-3">
+        {budgets.map((budget) => (
+          <Link href={"/"} key={budget.id}>
+            {budget.name}
+          </Link>
+        ))}
+      </ul>
     </Wrapper>
   );
 };
