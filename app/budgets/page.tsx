@@ -1,5 +1,8 @@
 "use client";
 
+// Page client pour la gestion des budgets
+// Ce fichier contient le formulaire d'ajout de budget (modal), la récupération
+// des budgets de l'utilisateur et l'affichage de la liste.
 import React, { useEffect, useState, useRef } from "react";
 import Wrapper from "../components/Wrapper";
 import { useUser } from "@clerk/nextjs";
@@ -9,24 +12,36 @@ import Notification from "../components/Notification";
 import { Plus } from "lucide-react";
 import { Budgets } from "@/type";
 import Link from "next/link";
+import BudgetItem from "../components/BudgetItem";
 
 const page = () => {
+  // Composant principal de la page /budgets
+  // Données utilisateur (Clerk)
   const user = useUser();
+
+  // États pour le formulaire d'ajout de budget
   const [budgetName, setBudgetName] = useState<string>("");
   const [budgetAmount, setBudgetAmount] = useState<string>("");
   const [showEmoji, setShowEmoji] = useState<boolean>(false);
   const [selectedEmoji, setSelectedEmoji] = useState<string>("");
+
+  // Notifications et liste des budgets récupérés depuis le serveur
   const [notification, setNotification] = useState<string>("");
   const [budgets, setBudgets] = useState<Budgets[]>([]);
+
+  // Contrôle du modal natif <dialog> et affichage d'un overlay fallback
   const [isModalOpen, setIsModalOpen] = useState(false);
   const modalRef = useRef<HTMLDialogElement | null>(null);
 
   const closeNotification = () => {
+    // Ferme la notification affichée en haut
     setNotification("");
   };
 
   const handleEmjiSelect = (emojiObject: { emoji: string }) => {
+    // Lorsque l'utilisateur sélectionne un emoji dans le picker
     setSelectedEmoji(emojiObject.emoji);
+    // on masque le picker
     setShowEmoji(false);
   };
 
@@ -44,6 +59,10 @@ const page = () => {
         selectedEmoji
       );
 
+      // Après création, on recharge la liste des budgets
+      fetchBudgets();
+
+      // Ferme le modal (si présent) et met à jour le flag d'affichage
       const modal =
         modalRef.current ??
         (document.getElementById("my_modal_3") as HTMLDialogElement | null);
@@ -52,12 +71,14 @@ const page = () => {
       }
       setIsModalOpen(false);
 
+      // Reset du formulaire et notification de succès
       setNotification("Nouveau budget crée avec succes");
       setBudgetName("");
       setBudgetAmount("");
       setSelectedEmoji("");
       setShowEmoji(false);
     } catch (error) {
+      // Affiche l'erreur à l'utilisateur
       setNotification(`Erreur lors de la creation du budget : ${error}`);
     }
   };
@@ -69,6 +90,7 @@ const page = () => {
           user.user?.primaryEmailAddress.emailAddress
         );
 
+        // Met à jour l'état local avec les budgets récupérés
         setBudgets(userBudget);
       } catch (error) {
         setNotification(`Erreur lors de la recuperation des budget : ${error}`);
@@ -77,6 +99,7 @@ const page = () => {
   };
 
   useEffect(() => {
+    // Au montage (ou quand l'email utilisateur change), on récupère les budgets
     fetchBudgets();
   }, [user.user?.primaryEmailAddress?.emailAddress]);
 
@@ -90,6 +113,7 @@ const page = () => {
 
   return (
     <Wrapper>
+      {/* Wrapper fournit le layout général (sidebar, padding, etc.) */}
       {notification && (
         <Notification
           message={notification}
@@ -113,7 +137,8 @@ const page = () => {
         >
           Ajouter un budget <Plus className="w-4 h-4" />
         </button>
-        {/* Overlay fallback for browsers: a fixed div with blur */}
+        {/* Overlay de fallback pour les navigateurs qui ne supportent pas dialog::backdrop
+            ce div couvre toute la page et ajoute un flou + teinte sombre */}
         {isModalOpen && (
           <div
             className="fixed inset-0 bg-black/50 backdrop-blur-sm z-40"
@@ -129,6 +154,7 @@ const page = () => {
           />
         )}
 
+        {/* Modal natif <dialog> : accessible et gère le focus automatiquement */}
         <dialog id="my_modal_3" ref={modalRef} className="modal z-50">
           <div className="modal-box">
             <form method="dialog">
@@ -179,10 +205,11 @@ const page = () => {
           </div>
         </dialog>
       </div>
-      <ul className="grid md:grid-cols-3 gap-3">
+      {/* Liste des budgets */}
+      <ul className="grid md:grid-cols-3 gap-3 mt-10">
         {budgets.map((budget) => (
           <Link href={"/"} key={budget.id}>
-            {budget.name}
+            <BudgetItem budget={budget} enableHover={1} />
           </Link>
         ))}
       </ul>
