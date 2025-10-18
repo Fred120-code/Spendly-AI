@@ -2,6 +2,7 @@
 
 import { prisma } from "@/lib/prisma";
 
+//pemet de creer une nouveau utlisateur
 export async function checkAndAddUser(email: string | undefined) {
   if (!email) return;
   try {
@@ -22,6 +23,7 @@ export async function checkAndAddUser(email: string | undefined) {
   }
 }
 
+//permet d'ajouter un budget pour l'utlisateur connecté
 export async function addBudget(
   email: string,
   name: string,
@@ -49,6 +51,7 @@ export async function addBudget(
   }
 }
 
+//permet de recher les budget creer par un utilisateur
 export async function getBudgetsByUser(email: string) {
   try {
     const user = await prisma.user.findUnique({
@@ -71,5 +74,23 @@ export async function getBudgetsByUser(email: string) {
   } catch (error) {
     console.error("Erreur lors de la recuperation des budgets:", error);
     throw error;
+  }
+}
+
+export async function getTrasactionByBdugetId(budgetId: string) {
+  try {
+    const budget = await prisma.budget.findUnique({
+      where: { id: budgetId },
+      include: {
+        transactions: true,
+      },
+    });
+    if (!budget) {
+      throw new Error("budget non trouvé");
+    }
+    return budget;
+    
+  } catch (error) {
+    console.error("Erreur lors de la recuperation des transaction:", error);
   }
 }

@@ -32,7 +32,9 @@ const BudgetItem: React.FC<BudgetItemProps> = ({ budget, enableHover }) => {
 
   // Classe CSS optionnelle pour effet au survol
   const hoverClasse =
-    enableHover === 1 ? "hover:shadow-xl hover:border-accent" : "";
+    enableHover === 1
+      ? "hover:shadow-xl hover:border-accent"
+      : "";
 
   return (
     <li

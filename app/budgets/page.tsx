@@ -208,7 +208,7 @@ const page = () => {
       {/* Liste des budgets */}
       <ul className="grid md:grid-cols-3 gap-3 mt-10">
         {budgets.map((budget) => (
-          <Link href={"/"} key={budget.id}>
+          <Link href={`/manage/${budget.id}`} key={budget.id}>
             <BudgetItem budget={budget} enableHover={1} />
           </Link>
         ))}
